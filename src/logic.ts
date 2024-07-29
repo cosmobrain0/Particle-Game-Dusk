@@ -1,11 +1,9 @@
 import type { PlayerId, DuskClient } from "dusk-games-sdk/multiplayer"
 
-// TODO: move game logic data here
 export interface GameState {
   playerIds: PlayerId[]
 }
 
-// TODO: allow the user to have actions
 type GameActions = {
 }
 

@@ -34,11 +34,8 @@ export class Vector {
     return this.x*this.x + this.y*this.y;
   }
 
-  add(other: Vector): Vector {
-    return new Vector(this.x+other.x, this.y+other.y);
-  }
-
-  mul(scalar: number): Vector {
-    return new Vector(this.x*scalar, this.y*scalar);
+  add(other: Vector) {
+    this.x += other.x;
+    this.y += other.y;
   }
 }
