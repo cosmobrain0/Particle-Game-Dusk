@@ -1,10 +1,11 @@
 import type { PlayerId, DuskClient } from "dusk-games-sdk/multiplayer"
 import { Vector } from "./vector"
 import { Particle, updateParticle } from "./particle"
+import { logicalHeight, logicalWidth } from "./transforms"
 
 // TODO: move game logic data here
 export interface GameState {
-  particle: Particle,
+  particles: Particle[],
   playerIds: PlayerId[]
   previousGameTime: number,
 }
@@ -21,10 +22,8 @@ Dusk.initLogic({
   minPlayers: 2,
   maxPlayers: 2,
   setup: allPlayerIds => {
-    let particle = new Particle(new Vector(2, 3));
-    particle.velocity = new Vector(0.2, 0.4);
     return {
-      particle,
+      particles: new Array(100).fill(0).map(_ => new Particle(new Vector(Math.random()*logicalWidth, Math.random()*logicalHeight), 0.3)),
       playerIds: allPlayerIds,
       previousGameTime: Dusk.gameTime(),
     };
@@ -35,7 +34,8 @@ Dusk.initLogic({
     let currentFrame = Dusk.gameTime();
     let dt = currentFrame-game.previousGameTime;
 
-    updateParticle(game.particle, dt);
+    for (let i=0; i<game.particles.length; i++)
+      updateParticle(game.particles[i], dt);
 
     game.previousGameTime = currentFrame;
   },

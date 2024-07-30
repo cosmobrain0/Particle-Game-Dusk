@@ -1,14 +1,14 @@
 import { logicalHeight, logicalWidth, transformPosition, transformScalar } from "./transforms";
-import { add, mul, Vector } from "./vector";
+import { add, mul, polar, Vector } from "./vector";
 
 export class Particle {
   position: Vector
   velocity: Vector
   static radius: number = 10;
   static fillStyle: string = "#fff";
-  constructor(position: Vector) {
+  constructor(position: Vector, speed: number) {
     this.position = position;
-    this.velocity = Vector.zero();
+    this.velocity = polar(Math.random()*2*Math.PI, speed);
   }
 }
 
@@ -24,12 +24,19 @@ export function updateParticle(p: Particle, dt: number) {
   p.position.y = Math.min(Math.max(p.position.y, 0), logicalHeight);
 }
 
-export function drawParticle(p: Particle, ctx: CanvasRenderingContext2D) {
-  ctx.beginPath();
-  let position = transformPosition(p.position);
-  let radius = transformScalar(Particle.radius);
-  ctx.arc(position.x, position.y, radius, 0, 2*Math.PI);
+export function drawParticles(p: Particle[], ctx: CanvasRenderingContext2D) {
   ctx.fillStyle = Particle.fillStyle;
+  ctx.strokeStyle = "#000";
+  let radius = transformScalar(Particle.radius);
+
+  ctx.beginPath();
+
+  for (let i=0; i<p.length; i++) {
+    let position = transformPosition(p[i].position);
+    ctx.moveTo(position.x, position.y);
+    ctx.arc(position.x, position.y, radius, 0, 2*Math.PI);
+  }
+
   ctx.fill();
 }
 

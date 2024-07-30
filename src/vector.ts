@@ -50,3 +50,7 @@ export function mul(v: Vector, scalar: number): Vector {
 export function div(v: Vector, scalar: number): Vector {
   return new Vector(v.x/scalar, v.y/scalar);
 }
+
+export function polar(theta: number, magnitude: number): Vector {
+  return new Vector(Math.cos(theta)*magnitude, Math.sin(theta)*magnitude);
+}
