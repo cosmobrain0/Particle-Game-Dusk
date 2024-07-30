@@ -17,7 +17,9 @@ export function updateParticle(p: Particle, dt: number) {
 
 export function drawParticle(p: Particle, ctx: CanvasRenderingContext2D) {
   ctx.beginPath();
-  ctx.arc(p.position.x, p.position.y, Particle.radius, 0, 2*Math.PI);
+  let position = transformPosition(p.position);
+  let radius = transformScalar(Particle.radius);
+  ctx.arc(position.x, position.y, radius 0, 2*Math.PI);
   ctx.fillStyle = Particle.fillStyle;
   ctx.fill();
 }
