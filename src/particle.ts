@@ -1,4 +1,4 @@
-import { Vector } from "./vector";
+import { add, mul, Vector } from "./vector";
 
 export class Particle {
   position: Vector
@@ -9,15 +9,16 @@ export class Particle {
     this.position = position;
     this.velocity = Vector.zero();
   }
-
-  update(dt: number) {
-    this.position = this.position.add(this.velocity.mul(dt));
-  }
-
-  draw(ctx: CanvasRenderingContext2D) {
-    ctx.beginPath();
-    ctx.arc(this.position.x, this.position.y, Particle.radius, 0, 2*Math.PI);
-    ctx.fillStyle = Particle.fillStyle;
-    ctx.fill();
-  }
 }
+
+export function updateParticle(p: Particle, dt: number) {
+  p.position = add(p.position, mul(p.velocity, dt));
+}
+
+export function drawParticle(p: Particle, ctx: CanvasRenderingContext2D) {
+  ctx.beginPath();
+  ctx.arc(p.position.x, p.position.y, Particle.radius, 0, 2*Math.PI);
+  ctx.fillStyle = Particle.fillStyle;
+  ctx.fill();
+}
+

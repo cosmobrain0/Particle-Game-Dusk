@@ -1,40 +1,42 @@
-import { Particle } from "./particle";
+import { drawParticle, Particle } from "./particle";
 import "./styles.css"
 
 import { PlayerId } from "dusk-games-sdk/multiplayer"
-import { Vector } from "./vector";
+import { add, div, mul, sub, Vector } from "./vector";
 
 const canvas = document.getElementById("canvas")! as HTMLCanvasElement;
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
+const logicalWidth = 1080;
+const logicalHeight = 1920;
+
+export function transformDirection(p: Vector): Vector {
+  return new Vector(p.x*canvas.width/logicalWidth, p.y*canvas.height/logicalHeight);
+}
+
+export function transformPosition(p: Vector): Vector {
+  const widthScale = canvas.width / logicalWidth;
+  const heightScale = canvas.height / logicalHeight;
+  const scale = Math.min(widthScale, heightScale);
+  const topLeft = div(sub(new Vector(canvas.width, canvas.height), mul(new Vector(logicalWidth, logicalHeight), scale)), 2);
+  return add(topLeft, transformDirection(p));
+}
+
+export function inverseDirection(p: Vector): Vector {
+  return new Vector(p.x*logicalWidth/canvas.width, p.y*logicalHeight/canvas.height);
+}
+
+export function inversePosition(p: Vector): Vector {
+  const topLeft = transformPosition(Vector.zero());
+  return inverseDirection(sub(p, topLeft));
+}
+
 const ctx = canvas.getContext("2d")!;
 
-let particle = new Particle(new Vector(2, 3));
-particle.velocity = new Vector(0.2, 0.4);
-
-const timeBetweenUpdates = 1000/8; // update roughly 8 times per second
-let lastUpdateTime = 0;
-
-let previousFrame = Date.now();
-let intervalID = setInterval(() => {
-  let currentFrame = Date.now();
-  let dt = currentFrame-previousFrame;
-
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  particle.update(dt);
-  particle.draw(ctx);
-
-  if (Dusk.gameTime() - lastUpdateTime > timeBetweenUpdates) {
-    // TODO: trigger an update somehow
-
-    lastUpdateTime = Dusk.gameTime();
-  }
-
-  previousFrame = currentFrame;
-}, 1000/30);
-
 Dusk.initClient({
-  onChange: ({ game, yourPlayerId, action }) => {
-    console.log("hi");
+  onChange: ({ game: { particle }, yourPlayerId, action }) => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    console.log(particle);
+    drawParticle(particle, ctx);
   },
 })

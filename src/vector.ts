@@ -25,20 +25,28 @@ export class Vector {
   static unitY(): Vector {
     return new Vector(0, 1);
   }
+}
 
-  length(): number {
-    return Math.sqrt(this.x*this.x + this.y*this.y);
-  }
+export function length(v: Vector, ): number {
+  return Math.sqrt(v.x*v.x + v.y*v.y);
+}
 
-  sqrLength(): number {
-    return this.x*this.x + this.y*this.y;
-  }
+export function sqrLength(v: Vector, ): number {
+  return v.x*v.x + v.y*v.y;
+}
 
-  add(other: Vector): Vector {
-    return new Vector(this.x+other.x, this.y+other.y);
-  }
+export function add(v: Vector, other: Vector): Vector {
+  return new Vector(v.x+other.x, v.y+other.y);
+}
 
-  mul(scalar: number): Vector {
-    return new Vector(this.x*scalar, this.y*scalar);
-  }
+export function sub(v: Vector, other: Vector): Vector {
+  return new Vector(v.x-other.x, v.y-other.y);
+}
+
+export function mul(v: Vector, scalar: number): Vector {
+  return new Vector(v.x*scalar, v.y*scalar);
+}
+
+export function div(v: Vector, scalar: number): Vector {
+  return new Vector(v.x/scalar, v.y/scalar);
 }
