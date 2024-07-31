@@ -52,3 +52,8 @@ export function drawPlayerTarget(player: Player, ctx: CanvasRenderingContext2D) 
   ctx.arc(targetPosition.x, targetPosition.y, arcRadius, lineMeetsArcAngle, lineMeetsArcAngle + 2*Math.PI);
   ctx.stroke();
 }
+
+export function pointOnPlayer(point: Vector, player: Player): boolean {
+  return point.x-player.position.x == Math.min(Math.max(point.x-player.position.x, 0), Player.sideLength) &&
+    point.y-player.position.y == Math.min(Math.max(point.y-player.position.y, 0), Player.sideLength);
+}

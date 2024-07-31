@@ -4,7 +4,7 @@ import "./styles.css"
 import { PlayerId } from "dusk-games-sdk/multiplayer"
 import { equals, Vector } from "./vector";
 import { transformDirection, transformPosition, logicalWidth, logicalHeight, inversePosition } from "./transforms";
-import { drawPlayer, drawPlayerTarget, Player, updatePlayer, } from "./player";
+import { drawPlayer, drawPlayerTarget, Player, pointOnPlayer, updatePlayer, } from "./player";
 import { GameState } from "./logic";
 
 const canvas = document.getElementById("canvas")! as HTMLCanvasElement;
@@ -54,7 +54,8 @@ function drawGame(particles: Particle[], players: Player[], playerId: string | u
 }
 
 Dusk.initClient({
-  onChange: ({ game, yourPlayerId, action }) => {
+  onChange: ({ game, yourPlayerId, action, event }) => {
+    if (event?.name == "timeSync") return;
     savedGame = game; 
     playerId = yourPlayerId;
     drawGame(game.particles, game.players, yourPlayerId);
@@ -67,16 +68,25 @@ window.onresize = () => {
 }
 
 window.addEventListener("touchstart", e => {
-  // TODO: first changed touch
   if (e.changedTouches.length > 0) {
-    let target = inversePosition(new Vector(e.changedTouches[0].clientX, e.changedTouches[0].clientY));
-    Dusk.actions.playerTarget(target);
+    handleInput(inversePosition(new Vector(e.changedTouches[0].clientX, e.changedTouches[0].clientY)));
   }
 });
 
 window.addEventListener("mousedown", e => {
-  // TODO: first changed touch
-  let target = inversePosition(new Vector(e.clientX, e.clientY));
-  Dusk.actions.playerTarget(target);
+  handleInput(inversePosition(new Vector(e.clientX, e.clientY)));
 });
+
+function handleInput(input: Vector) {
+  if (savedGame == null) return;
+  let player = savedGame.players.find(x => x.id == playerId);
+  if (player == undefined) return;
+  // TODO: finish this off
+  if (pointOnPlayer(input, player)) {
+    console.log("Explosion");
+    // TODO: trigger explosion
+  } else {
+    Dusk.actions.playerTarget(input);
+  }
+}
 
