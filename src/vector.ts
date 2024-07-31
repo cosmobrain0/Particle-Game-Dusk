@@ -27,12 +27,16 @@ export class Vector {
   }
 }
 
-export function length(v: Vector, ): number {
+export function length(v: Vector): number {
   return Math.sqrt(v.x*v.x + v.y*v.y);
 }
 
-export function sqrLength(v: Vector, ): number {
+export function sqrLength(v: Vector): number {
   return v.x*v.x + v.y*v.y;
+}
+
+export function theta(v: Vector): number {
+  return Math.atan2(v.y, v.x);
 }
 
 export function add(v: Vector, other: Vector): Vector {
@@ -53,4 +57,13 @@ export function div(v: Vector, scalar: number): Vector {
 
 export function polar(theta: number, magnitude: number): Vector {
   return new Vector(Math.cos(theta)*magnitude, Math.sin(theta)*magnitude);
+}
+
+export function normalised(v: Vector) {
+  const l = length(v);
+  return new Vector(v.x/l, v.y/l);
+}
+
+export function equals(a: Vector, b: Vector) {
+  return a.x == b.x && a.y == b.y;
 }
